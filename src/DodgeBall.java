@@ -50,10 +50,12 @@ public class DodgeBall extends GraphicsProgram implements ActionListener
 	
 	public void actionPerformed(ActionEvent e) 
 	{
+		hitDetection();
 		numTimes ++;
 		if (numTimes % 40 == 0) addAnEnemy();
 		moveAllBallsOnce();
 		moveAllEnemiesOnce();
+		
 		
 	}
 	
@@ -111,7 +113,28 @@ public class DodgeBall extends GraphicsProgram implements ActionListener
 	{
 		for (GRect enemy:enemies)
 		{
-		enemy.move(0, rgen.nextInt(-2, 2));
+			enemy.move(0, rgen.nextInt(-2, 2));
+		}
+	}
+
+	private void hitDetection()
+	{
+		for (int i = enemies.size() - 1; i >= 0; i--)
+		{
+			GRect tempEnemy = enemies.get(i);
+
+			for (GOval ball : balls)
+			{
+				GObject tempObj = getElementAt(ball.getX() + ball.getWidth() + 1, ball.getY() + ball.getHeight() / 2);
+
+				if (tempObj == tempEnemy)
+				{
+					remove(tempEnemy);
+					enemies.remove(i);
+					text.setLabel("" + enemies.size());
+					break;
+				}
+			}
 		}
 	}
 	
